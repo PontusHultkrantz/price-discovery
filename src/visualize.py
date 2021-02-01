@@ -4,14 +4,17 @@ COLOR_CYCLE = plt.rcParams['axes.prop_cycle'].by_key()['color']
     
 def plot_Gstar(ticker, Gstar, misc):
     ''' Plot Micro Price Adjustment'''
-    bin_edges = misc['imb_bucket_bins']
-    bucket_mid = 0.5*(bin_edges[:-1] + bin_edges[1::])
+    bin_edges = misc['imb_bucket_edges']
+    bucket_mid = misc['imb_bucket_mid']
     
     plt.figure()
     plt.title('{} adjustments'.format(ticker))
     
     plt.plot([0, 1], [0, 0], label='Mid adj', color=COLOR_CYCLE[0])
     plt.plot([0, 1], [-0.5, 0.5], label='Weighted mid adj', color=COLOR_CYCLE[1])
+    plt.hlines(-0.5, 0, 1, color='k')
+    plt.hlines(0.5, 0, 1, color='k')
+    #plt.fill_between([0, 1], [-0.5, -0.5], [0.5, 0.5], color='k', alpha=0.1)
     
     for i, (sprd, grp) in enumerate(Gstar.groupby(level='spread')):
         lbl = 'spread = {} tick'.format(i+1)
@@ -31,8 +34,8 @@ def plot_Gstar(ticker, Gstar, misc):
     
 def plot_Bstar(B_pmf, misc):
     ''' Plot stationary transition probability mass function '''
-    bin_edges = misc['imb_bucket_bins']
-    bucket_mid = 0.5*(bin_edges[:-1] + bin_edges[1::])
+    bin_edges = misc['imb_bucket_edges']
+    bucket_mid = misc['imb_bucket_mid']
 
     for i, (next_sprd, marginal_pdf) in enumerate(B_pmf.groupby(level='next_spread')):
         lbl = '$s$ = {} tick'.format(i+1)

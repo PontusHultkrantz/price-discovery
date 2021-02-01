@@ -46,7 +46,9 @@ def discretize(data, n_imb, dt, n_spread):
     low_edge = np.amin([T['imb'].min(), 1.0-T['imb'].max()])
     edges = np.linspace(low_edge, 1.0 - low_edge, n_imb + 1)
     T['imb_bucket'], bins = pd.cut(T['imb'], edges, include_lowest=True, retbins=True, labels=False)    
-    misc['imb_bucket_bins'] = bins
+    misc['imb_bucket_edges'] = bins
+    bucket_mid = 0.5*(bins[:-1] + bins[1::])
+    misc['imb_bucket_mid'] = bucket_mid
     
     # Step ahead state variables.
     T[['next_mid', 'next_spread', 'next_time', 'next_imb_bucket']] = T[['mid', 'spread', 'time', 'imb_bucket']].shift(-dt)

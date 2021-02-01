@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from numpy.linalg import matrix_power as mpow
 
 def _full_stspace(T):
     ''' Get all visited unique states. '''
