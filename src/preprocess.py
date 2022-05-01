@@ -51,7 +51,7 @@ def discretize(data, n_imb, dt, n_spread):
     misc['imb_bucket_mid'] = bucket_mid
     
     # Step ahead state variables.
-    T[['next_mid', 'next_spread', 'next_time', 'next_imb_bucket']] = T[['mid', 'spread', 'time', 'imb_bucket']].shift(-dt)
+    T[['next_mid', 'next_spread', 'next_time', 'next_imb_bucket', 'next_as', 'next_bs', 'next_imb']] = T[['mid', 'spread', 'time', 'imb_bucket', 'as', 'bs', 'imb']].shift(-dt)
 
     # Step ahead change in mid price. Mid price has half a tick resolution 0.5*(bid + ask), when either bid or ask changes.
     mid_tsize = 0.5 * ticksize

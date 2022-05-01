@@ -28,8 +28,24 @@ def _get_raw_df_xbt(ticker):
     df['time'] = df.index # expected by Microprice code
     return df
 
+def _get_raw_df_xbt2(ticker):
+    import dateutil
+    src = r"20210403.csv.gz"
+    iter_csv = pd.read_csv(src, iterator=True, chunksize=100000, compression='gzip')
+    df = pd.concat([chunk[chunk['symbol'] == 'XBTUSD'] for chunk in iter_csv])
+    df.drop(inplace=True, columns=['symbol'])
+    df['timestamp'] = df['timestamp'].map(dateutil.parser.isoparse) 
+    df['time'] = df.index # expected by Microprice code
+    #with gzip.open('{}-quotes.gz'.format(ticker), 'rb+') as f_hnd:
+        #df = pickle.load(f_hnd)    
+
+    #df['time'] = df.index # expected by Microprice code
+    #return df
+    return df
+
 def _extend_fields(df):
     df['mid'] = 0.5 * (df['bid'] + df['ask'])
+    df['sprd'] = 0.5 * (df['ask'] - df['bid'])
     df['imb']= df['bs'] / (df['bs'] + df['as'])
     df['wmid']= df['ask'] * df['imb'] + df['bid'] * (1-df['imb'])
     return df
