@@ -4,7 +4,7 @@ import pickle
 import gzip
 
 def _get_raw_df(ticker):
-    file1 = '{}_20110301_20110331.csv'.format(ticker)
+    file1 = 'data\\{}_20110301_20110331.csv'.format(ticker)
     df = pd.read_csv(file1, header=None, names=['date','time','bid','bs','ask','as'])
     df = df.dropna()
     df[df.columns] = df[df.columns].astype(float)
@@ -22,7 +22,7 @@ def _get_raw_df_xbt(ticker):
     #with gzip.open('{}-quotes.gz'.format(ticker), "wb+") as f_hnd:
         #pickle.dump(df, f_hnd)    
     
-    with gzip.open('{}-quotes.gz'.format(ticker), 'rb+') as f_hnd:
+    with gzip.open('data\\{}-quotes.gz'.format(ticker), 'rb+') as f_hnd:
         df = pickle.load(f_hnd)    
 
     df['time'] = df.index # expected by Microprice code
@@ -30,7 +30,7 @@ def _get_raw_df_xbt(ticker):
 
 def _get_raw_df_xbt2(ticker):
     import dateutil
-    src = r"20210403.csv.gz"
+    src = r"data\\20210403.csv.gz"
     iter_csv = pd.read_csv(src, iterator=True, chunksize=100000, compression='gzip')
     df = pd.concat([chunk[chunk['symbol'] == 'XBTUSD'] for chunk in iter_csv])
     df.drop(inplace=True, columns=['symbol'])
